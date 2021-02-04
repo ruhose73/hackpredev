@@ -38,10 +38,9 @@ router.post(
             }
 
             const hashedPassword = await bcrypt.hash(password, 12)
-            const user = new User({email, password: hashedPassword, login})
+            const user = new User({email, password: hashedPassword, login, quant_likes: 0})
 
             await user.save()
-
             res.status(201).json({message: 'Пользователь создан'})
 
         } catch (e) {

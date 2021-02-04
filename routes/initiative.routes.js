@@ -6,9 +6,7 @@ const jwt = require('jsonwebtoken')
 const {check, validationResult} = require('express-validator')
 const Post = require('../models/Post')
 const User = require('../models/User')
-const Likes = require('../models/Likes')
 const router = Router()
-
 
 
 //создание поста
@@ -42,7 +40,6 @@ router.post(
             const userpost = await User.findByIdAndUpdate(decodedToken.userId, {posts:post.id}, {new:true})
             await userpost.save()
             const post_id = post.id
-            const nulllike = await Post.findByIdAndUpdate(post_id, {posts:post.id, quant_likes: 0 }, {new:true})
             res.status(201).json({post_id})
 
         } catch (e) {
@@ -93,6 +90,7 @@ router.post(
             const {access_token} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
             const posts = await Post.find({})
+
             res.status(201).json({posts})
         }
         catch (e)
@@ -139,31 +137,6 @@ router.post(
         }
     }
 )
-
-
-//поставить лайк посту
-router.post(
-    '/likepost',
-    async (req, res) => {
-        try {
-            console.log(req.body)
-
-            const {access_token, post_id} = req.body
-            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-
-            const like = new Likes({owner:decodedToken.userId, post: post_id })
-            await like.save()
-            const likes = await Post.findById(post_id)
-            console.log(likes)
-            let qlikes = likes.quant_likes+1
-            console.log(qlikes)
-            const post = await Post.findByIdAndUpdate(post_id, {quant_likes:qlikes}, {new:true})
-            res.status(201).json({qlikes})
-
-        } catch (e) {
-            res.status(500).json({message: 'Ошибка сервера. Лайк поста'})
-        }
-    })
 
 
 module.exports = router

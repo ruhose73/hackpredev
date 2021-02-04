@@ -5,6 +5,7 @@ const config = require('config')
 const jwt = require('jsonwebtoken')
 const {check, validationResult} = require('express-validator')
 const User = require('../models/User')
+const Likes = require('../models/Likes')
 const router = Router()
 
 //обновить или добавить мобильный телефон
@@ -55,5 +56,25 @@ router.post(
         }
     }
 )
+
+//лайк пользователя
+router.post(
+    '/likeuser',
+    async (req, res) => {
+        try {
+            console.log(req.body)
+
+            const {access_token, user_id} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+
+            const like = new Likes({owner:decodedToken.userId, user: user_id })
+            await like.save()
+            res.status(201).json({message: 'Вы поставили лайк пользователю!!!'})
+
+        } catch (e) {
+            res.status(500).json({message: 'Ошибка сервера. Лайк пользователя'})
+        }
+    })
+
 
 module.exports = router
