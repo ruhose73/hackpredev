@@ -28,6 +28,7 @@ router.post(
                 })
             }
 
+            console.log(req.body)
             const {email, password, login} = req.body
 
             const candidate = await User.findOne({email})
@@ -65,6 +66,7 @@ router.post(
                     message: 'Некорректные данные при входе в систему'
                 })
             }
+            console.log(req.body)
             const {email, password} = req.body
             const user = await User.findOne({email})
             if (!user) {

@@ -37,8 +37,8 @@ router.post(
 
             const userpost = await User.findByIdAndUpdate(decodedToken.userId, {posts:post.id}, {new:true})
             await userpost.save()
-
-            res.status(201).json({message: 'Пост создан'})
+            const post_id = post.id
+            res.status(201).json({post_id})
 
         } catch (e) {
             res.status(500).json({message: 'Ошибка сервера. Создание поста'})
@@ -61,18 +61,17 @@ router.post(
                     message: 'Некорректные данные'
                 })
             }
-
-            const {access_token,post, header, body} = req.body
-
+            console.log(req.body)
+            const {access_token,post_id, header, body} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-            const user = await User.findByIdAndUpdate(decodedToken.userId, {header:header}, {new:true})
-            await user.save()
+            const post = await Post.findOneAndUpdate({_id:post_id, owner:decodedToken.userId}, {header:header, body:body}, {new:true})
+            await post.save()
 
-            res.status(201).json({message: 'Пользователь обновлен'})
+            res.status(201).json({post_id})
         }
         catch (e)
         {
-            res.status(500).json({message: 'Ошибка сервера. Смена номера'})
+            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
         }
     }
 )

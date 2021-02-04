@@ -20,7 +20,7 @@ router.post(
                     message: 'Некорректные данные'
                 })
             }
-
+            console.log(req.body)
             const {access_token,mobile} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
             const user = await User.findByIdAndUpdate(decodedToken.userId, {mobile:mobile}, {new:true})
@@ -41,9 +41,7 @@ router.post(
             const {access_token,firstname,lastname} = req.body
             console.log(req.body)
 
-            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-            console.log(decodedToken)
-
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'))
             const user = await User.findByIdAndUpdate(decodedToken.userId, {firstName:firstname, lastName:lastname}, {new:true})
             await user.save()
             res.status(201).json({message: 'Пользователь обновлен'})
