@@ -8,6 +8,8 @@ const Post = require('../models/Post')
 const User = require('../models/User')
 const router = Router()
 
+
+//создание поста
 router.post(
     '/createpost',
     [
@@ -45,6 +47,8 @@ router.post(
         }
     })
 
+
+//обновление поста
 router.post(
     '/postupdate',
     [
@@ -76,6 +80,44 @@ router.post(
     }
 )
 
+
+//получить все посты
+router.post(
+    '/',
+    async (req, res)=> {
+        try{
+            console.log(req.body)
+            const {access_token} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+            const posts = await Post.find({})
+
+            res.status(201).json({posts})
+        }
+        catch (e)
+        {
+            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+        }
+    }
+)
+
+//получить все СВОИ посты
+router.post(
+    '/allposts',
+    async (req, res)=> {
+        try{
+            console.log(req.body)
+            const {access_token} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+            const posts = await Post.find({ owner:decodedToken.userId })
+
+            res.status(201).json({posts})
+        }
+        catch (e)
+        {
+            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+        }
+    }
+)
 
 
 module.exports = router
