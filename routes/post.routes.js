@@ -119,5 +119,24 @@ router.post(
     }
 )
 
+//получить все посты другого пользователя
+router.post(
+    '/alluserposts',
+    async (req, res)=> {
+        try{
+            console.log(req.body)
+            const {access_token, user_id} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+            const posts = await Post.find({ owner:user_id })
+
+            res.status(201).json({posts})
+        }
+        catch (e)
+        {
+            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+        }
+    }
+)
+
 
 module.exports = router

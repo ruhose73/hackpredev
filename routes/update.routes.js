@@ -7,6 +7,7 @@ const {check, validationResult} = require('express-validator')
 const User = require('../models/User')
 const router = Router()
 
+//обновить или добавить мобильный телефон
 router.post(
     '/numberupdate',
     [check('mobile', 'Минимальная длина номера 10 символов').isLength({min:10})],
@@ -34,6 +35,8 @@ router.post(
     }
 )
 
+
+//Добавить ФИО
 router.post(
     '/nameupdate',
     async (req, res)=> {
