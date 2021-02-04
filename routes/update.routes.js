@@ -22,10 +22,7 @@ router.post(
             }
 
             const {access_token,mobile} = req.body
-            console.log(req.body)
-            console.log(access_token)
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-            console.log(decodedToken)
             const user = await User.findByIdAndUpdate(decodedToken.userId, {mobile:mobile}, {new:true})
             await user.save()
             res.status(201).json({message: 'Пользователь обновлен'})

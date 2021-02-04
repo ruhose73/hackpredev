@@ -10,6 +10,7 @@ app.use(express.json({extended: true}))
 
 app.use('/api/auth', require('./routes/auth.routes'))
 app.use('/api/userupdate', require('./routes/update.routes.js'))
+app.use('/api/posts', require('./routes/post.routes.js'))
 
 const PORT = config.get('port') || 5000
 
