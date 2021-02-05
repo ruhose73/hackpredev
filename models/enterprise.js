@@ -14,8 +14,6 @@ const schema = new Schema({
     stage3:String,
     stage4:String,
     stage5:String,
-    likes: [{type: Types.ObjectId, ref: 'Likes'}],//кто поставил лайки
-    quant_likes : Number, //кол-во лайков
     posts: [{type: Types.ObjectId,  ref: 'Post'}]
 })
 

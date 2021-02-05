@@ -172,34 +172,6 @@ router.post(
     }
 )
 
-//поставить лайк инициативе
-// router.post(
-//     '/likeinterpises',
-//     async (req, res) => {
-//         try {
-//             res.setHeader('Access-Control-Allow-Origin', '*');
-//             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-//             const {access_token, interprise_id} = req.body
-//
-//             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-//             console.log(decodedToken )
-//             const id_user=decodedToken.userId
-//             console.log(id_user)
-//             const like = new Likes({owner:id_user, interprise:interprise_id })
-//             console.log(id_user)
-//
-//             console.log(like)
-//             const Likes = await Interprise.findById(interprise_id)
-//             console.log(Likes)
-//             qlikes = Likes.quant_likes+1
-//             const NewLike = await Interprise.findByIdAndUpdate(interprise_id, {quant_likes:qlikes},{new:true})
-//             NewLike.save()
-//
-//         } catch (e) {
-//             res.status(500).json({message: 'Ошибка сервера. Лайк поста'})
-//         }
-//     })
-
 
 
 module.exports = router

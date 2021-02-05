@@ -8,7 +8,7 @@ const schema = new Schema({
     body: {type: String, required:true},
     date: {type: Date, default: Date.now},  //дата создания поста
     owner: {type: Types.ObjectId, ref: 'User'} , //создатель поста
-    likes: [{type: Types.ObjectId, ref: 'Likes'}],  //кто поставил лайки
+    likes: {type: Types.ObjectId, ref: 'Likes'},  //кто поставил лайки
     quant_likes : Number, //кол-во лайков
     interprise : {type: Types.ObjectId, ref: 'Interprise'}
 })
