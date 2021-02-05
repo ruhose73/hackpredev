@@ -119,24 +119,39 @@ router.get('/', async (req, res) => {
 
 
 
+router.get('/allposts', async (req, res) => {
+    try {
+        const {access_token} = req.headers
+        console.log(access_token)
+        const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+        console.log(decodedToken)
+
+        const posts = await Post.find({ owner:decodedToken.userId })
+        res.status(201).json({posts})
+
+    } catch (e) {
+        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+    }
+})
+
 //поменять на ГЕТ
 //получить все СВОИ посты
-router.post(
-    '/allposts',
-    async (req, res)=> {
-        try{
-            const {access_token} = req.body
-            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-            const posts = await Post.find({ owner:decodedToken.userId })
-
-            res.status(201).json({posts})
-        }
-        catch (e)
-        {
-            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
-        }
-    }
-)
+// router.post(
+//     '/allposts',
+//     async (req, res)=> {
+//         try{
+//             const {access_token} = req.body
+//             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+//             const posts = await Post.find({ owner:decodedToken.userId })
+//
+//             res.status(201).json({posts})
+//         }
+//         catch (e)
+//         {
+//             res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+//         }
+//     }
+// )
 
 //получить все посты другого пользователя
 router.post(
