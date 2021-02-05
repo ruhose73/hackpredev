@@ -132,7 +132,7 @@ router.get('/userinfo', async (req, res) => {
     }
 })
 
-//лайк пользователя
+//Получить всех пользователей
 router.post(
     '/allusers',
     async (req, res) => {
@@ -144,7 +144,7 @@ router.post(
             const user = await User.findById(user_id)
             res.status(201).json({user})
         } catch (e) {
-            res.status(500).json({message: 'Ошибка сервера. Лайк пользователя'})
+            res.status(500).json({message: 'Ошибка сервера. Получение всех пользователей'})
         }
     })
 
