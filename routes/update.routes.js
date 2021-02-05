@@ -8,29 +8,24 @@ const User = require('../models/User')
 const Likes = require('../models/Likes')
 const router = Router()
 
-//обновить или добавить мобильный телефон
+//обновить или добавить школу, универ, специализацию
 router.post(
-    '/education',
+    '/educationandspecialization',
     async (req, res)=> {
         try{
 
-            const errors = validationResult(req)
-            if (!errors.isEmpty()) {
-                return res.status(400).json({
-                    errors: errors.array(),
-                    message: 'Некорректные данные'
-                })
-            }
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
             console.log(req.body)
-            const {access_token,school, university} = req.body
+            const {access_token,school, university, specialization} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-            const userSchool = await User.findByIdAndUpdate(decodedToken.userId, {educationSchool:{school:school}}, {new:true})
+            const userSchool = await User.findByIdAndUpdate(decodedToken.userId, {school:school}, {new:true})
             await userSchool.save()
-            const userUniversity = await User.findByIdAndUpdate(decodedToken.userId, {educationUniversity:{university:university}}, {new:true})
+            const userUniversity = await User.findByIdAndUpdate(decodedToken.userId, {university:university}, {new:true})
             await userUniversity.save()
+            const userSpecialization = await User.findByIdAndUpdate(decodedToken.userId, {specialization:specialization}, {new:true})
+            await userSpecialization.save()
             res.status(201).json({message: 'Пользователь обновлен'})
         }
         catch (e)
@@ -63,8 +58,52 @@ router.post(
     }
 )
 
+//Добавить или обновить графу о себе
+router.post(
+    '/aboutme',
+    async (req, res)=> {
+        try{
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
-router.get('/userinfo', async (req, res) => {
+            const {access_token,aboutme} = req.body
+
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'))
+            const about = await User.findByIdAndUpdate(decodedToken.userId, {aboutme:aboutme}, {new:true})
+            await about.save()
+            res.status(201).json({message: 'Пользователь обновлен'})
+        }
+        catch (e)
+        {
+            res.status(500).json({message: 'Ошибка сервера. Смена номера'})
+        }
+    }
+)
+
+//Добавить или обновить соцсети
+router.post(
+    '/socials',
+    async (req, res)=> {
+        try{
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
+            const {access_token,twitter,facebook,vk,instagram} = req.body
+
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'))
+            const social = await User.findByIdAndUpdate(decodedToken.userId, {twitter:twitter,facebook:facebook,vk:vk,instagram:instagram}, {new:true})
+            await social.save()
+            res.status(201).json({message: 'Пользователь обновлен'})
+        }
+        catch (e)
+        {
+            res.status(500).json({message: 'Ошибка сервера. Смена номера'})
+        }
+    }
+)
+
+//получить всех пользователей
+router.get('/alluser', async (req, res) => {
     try {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
@@ -76,6 +115,26 @@ router.get('/userinfo', async (req, res) => {
 
         const users = await User.find({})
         res.status(201).json({users})
+
+    } catch (e) {
+        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+    }
+})
+
+//загрузить свою информацию
+router.get('/userinfo', async (req, res) => {
+    try {
+        res.setHeader('Access-Control-Allow-Origin', '*')
+        res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
+        console.log(req.headers)
+        const {access_token} = req.headers
+        console.log(access_token)
+        const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+        console.log(decodedToken)
+        const user_id = decodedToken.userId
+        console.log(user_id)
+        const user = await User.findById(user_id)
+        res.status(201).json({user})
 
     } catch (e) {
         res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })

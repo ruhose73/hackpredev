@@ -14,13 +14,17 @@ const schema = new Schema({
     mobile: String, //  +   телефон обновляется позже
     password: {type: String, required: true},   //  +   пароль
 
-    educationSchool: [{school: String}], //образование школа
-    educationUniversity: [{university: String}],
-    specialization: [{prof: String}],
+    school: String, //образование школа
+    university: String, //образование универа
+    faculty: String,    //факультет
+    specialization:String,  //специализация
 
-    hobbies: [{hobby: String}],
+    aboutme: String,    //обо мне
 
-    socialProfiles: [{twitter: String}, {facebook: String}, {vk: String}, {instagram: String}], //сетки
+    twitter: String,
+    facebook: String,
+    vk: String,
+    instagram: String, //сетки
 
     avatarPath:String, //путь до аватарки (ссылка на хостинг или локал ХД)
 
