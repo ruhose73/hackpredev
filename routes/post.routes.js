@@ -84,9 +84,9 @@ router.post(
 
 router.get('/', async (req, res) => {
     try {
-        const {token} = req.headers
-        console.log(token)
-        const decodedToken = jwt.verify(token, config.get('jwtSecret'));
+        const {access_token} = req.headers
+        console.log(access_token)
+        const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
         console.log(decodedToken)
         const posts = await Post.find({})
         res.status(201).json({posts})
