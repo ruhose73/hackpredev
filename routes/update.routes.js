@@ -134,7 +134,7 @@ router.get('/userinfo', async (req, res) => {
 
 //Получить всех пользователей
 router.post(
-    '/allusers',
+    '/alluserinfo',
     async (req, res) => {
         try {
             res.setHeader('Access-Control-Allow-Origin', '*');
