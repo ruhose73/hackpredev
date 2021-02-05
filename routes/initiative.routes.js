@@ -100,6 +100,7 @@ router.post(
     }
 )
 
+//поменять на ГЕТ
 //получить все СВОИ посты
 router.post(
     '/allposts',

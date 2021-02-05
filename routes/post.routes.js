@@ -50,7 +50,6 @@ router.post(
         }
     })
 
-
 //обновление поста
 router.post(
     '/postupdate',
@@ -83,31 +82,49 @@ router.post(
     }
 )
 
+router.get('/', async (req, res) => {
+    try {
+        const {token} = req.headers
+        console.log(token)
+        const decodedToken = jwt.verify(token, config.get('jwtSecret'));
+        console.log(decodedToken)
+        const posts = await Post.find({})
+        res.status(201).json({posts})
 
-//получить все посты
-router.post(
-    '/',
-    async (req, res)=> {
-        try{
-            console.log(req.body)
-            const {access_token} = req.body
-            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-            const posts = await Post.find({})
-            res.status(201).json({posts})
-        }
-        catch (e)
-        {
-            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
-        }
+    } catch (e) {
+        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
     }
-)
+})
 
+//поменять на ГЕТ
+//получить все посты
+// router.post(
+//     '/',
+//     async (req, res)=> {
+//         try{
+//             res.setHeader('Access-Control-Allow-Origin', '*');
+//             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+//             console.log(req.body)
+//             const {access_token} = req.body
+//             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+//             const posts = await Post.find({})
+//             res.status(201).json({posts})
+//         }
+//         catch (e)
+//         {
+//             res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+//         }
+//     }
+// )
+
+
+
+//поменять на ГЕТ
 //получить все СВОИ посты
 router.post(
     '/allposts',
     async (req, res)=> {
         try{
-            console.log(req.body)
             const {access_token} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
             const posts = await Post.find({ owner:decodedToken.userId })

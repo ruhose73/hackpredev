@@ -27,7 +27,6 @@ router.post(
                     message: 'Некорректный данные при регистрации'
                 })
             }
-
             console.log(req.body)
             const {email, password, login} = req.body
 
