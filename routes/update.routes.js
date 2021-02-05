@@ -17,7 +17,6 @@ router.post(
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
-            console.log(req.body)
             const {access_token,school, university, specialization} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
             const userSchool = await User.findByIdAndUpdate(decodedToken.userId, {school:school}, {new:true})
@@ -44,7 +43,6 @@ router.post(
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
             const {access_token,firstname,lastname,sex, age, mobile} = req.body
-            console.log(req.body)
 
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'))
             const user = await User.findByIdAndUpdate(decodedToken.userId, {firstName:firstname, lastName:lastname,sex: sex, age: age, mobile:mobile}, {new:true})
@@ -107,11 +105,8 @@ router.get('/alluser', async (req, res) => {
     try {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-        console.log(req.headers)
         const {access_token} = req.headers
-        console.log(access_token)
         const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-        console.log(decodedToken)
 
         const users = await User.find({})
         res.status(201).json({users})
@@ -126,13 +121,9 @@ router.get('/userinfo', async (req, res) => {
     try {
         res.setHeader('Access-Control-Allow-Origin', '*')
         res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept')
-        console.log(req.headers)
         const {access_token} = req.headers
-        console.log(access_token)
         const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-        console.log(decodedToken)
         const user_id = decodedToken.userId
-        console.log(user_id)
         const user = await User.findById(user_id)
         res.status(201).json({user})
 
@@ -147,7 +138,6 @@ router.post(
     '/likeuser',
     async (req, res) => {
         try {
-            console.log(req.body)
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
             const {access_token, user_id} = req.body
@@ -155,8 +145,10 @@ router.post(
 
             const like = new Likes({owner:decodedToken.userId, user: user_id })
             await like.save()
+            const Like = await User.findById(user_id)
+            qlikes = Like.quant_likes+1
+            const NewLike = await User.findByIdAndUpdate(user_id, {quant_likes:qlikes},{new:true})
             res.status(201).json({message: 'Вы поставили лайк пользователю!!!'})
-
         } catch (e) {
             res.status(500).json({message: 'Ошибка сервера. Лайк пользователя'})
         }
