@@ -82,6 +82,7 @@ router.post(
     }
 )
 
+//получить все посты
 router.get('/', async (req, res) => {
     try {
         const {access_token} = req.headers
@@ -118,7 +119,7 @@ router.get('/', async (req, res) => {
 // )
 
 
-
+//получить все СВОИ посты
 router.get('/allposts', async (req, res) => {
     try {
         const {access_token} = req.headers
@@ -196,6 +197,24 @@ router.post(
             res.status(500).json({message: 'Ошибка сервера. Лайк поста'})
         }
     })
+
+router.post(
+    '/onepost',
+    async (req, res) => {
+        try {
+            console.log(req.body)
+
+            const {access_token, post_id} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+            const onepost = await Post.findById(post_id)
+            console.log(onepost)
+            res.status(201).json({onepost})
+        } catch (e) {
+            res.status(500).json({message: 'Ошибка сервера. Лайк поста'})
+        }
+    })
+
+
 
 
 module.exports = router
