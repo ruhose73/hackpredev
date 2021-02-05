@@ -139,7 +139,7 @@ router.get('/allposts', async (req, res) => {
         console.log(decodedToken)
 
         const posts = await Post.find({ owner:decodedToken.userId })
-        res.status(201).json({posts})
+        res.status(200).json({posts})
 
     } catch (e) {
         res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
