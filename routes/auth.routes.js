@@ -14,6 +14,7 @@ router.post(
     '/register',
     [
         check('email', 'Некорректный email').isEmail(),
+        check('login', 'Некорректный email').exists(),
         check('password', 'Минимальная длина пароля 6 символов')
             .isLength({min: 6})
     ],
@@ -39,7 +40,9 @@ router.post(
             }
 
             const hashedPassword = await bcrypt.hash(password, 12)
-            const user = new User({email, password: hashedPassword, login, quant_likes: 0})
+
+
+            const user = new User({email:email, password: hashedPassword, login, quant_likes: 0})
 
             await user.save()
             res.status(201).json({message: 'Пользователь создан'})

@@ -157,14 +157,17 @@ router.post(
         try {
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
             const {access_token, user_id} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-
             const like = new Likes({owner:decodedToken.userId, user: user_id })
             await like.save()
             const Like = await User.findById(user_id)
+            console.log(Like.quant_likes)
             qlikes = Like.quant_likes+1
+            console.log(qlikes)
             const NewLike = await User.findByIdAndUpdate(user_id, {quant_likes:qlikes},{new:true})
+            NewLike.save()
             res.status(201).json({message: 'Вы поставили лайк пользователю!!!'})
         } catch (e) {
             res.status(500).json({message: 'Ошибка сервера. Лайк пользователя'})

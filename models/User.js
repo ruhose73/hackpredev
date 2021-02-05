@@ -30,8 +30,8 @@ const schema = new Schema({
 
     accountCreated: {type: Date, default: Date.now},    //  +   дата создания
     posts: [{type: Types.ObjectId, ref: 'Post'}], //ссылка на схиму с постами
-    projects: [{type: Types.ObjectId, title:String,  ref: 'Interprise'}],
-    likes: {type: Types.ObjectId, ref: 'Likes'},  //кто поставил лайки
+    projects: [{type: Types.ObjectId,ref: 'Interprise'}],
+    likes: [{type: Types.ObjectId, ref: 'Likes'}],  //кто поставил лайки
     quant_likes : Number //кол-во лайков
 
 
