@@ -31,6 +31,7 @@ router.post(
 
             const {access_token, title, content} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+
             const candidateHeader = await Interprise.findOne({title})
             if (candidateHeader) {
                 return res.status(400).json({message: 'Такой заголовок уже существует'})
@@ -46,3 +47,68 @@ router.post(
             res.status(500).json({message: 'Ошибка сервера. Создание поста'})
         }
     })
+
+//получить все интерпрайзы
+router.get('/allinterpises', async (req, res) => {
+    try {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
+        const {access_token} = req.headers
+        console.log(access_token)
+        const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+        console.log(decodedToken)
+
+        const interprises = await Interprise.find({})
+        res.status(201).json({interprises})
+
+    } catch (e) {
+        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+    }
+})
+
+
+//получить интерпрайз СВОЙ
+router.get('/myinterpise', async (req, res) => {
+    try {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
+        const {access_token} = req.headers
+        console.log(access_token)
+        const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+        console.log(decodedToken)
+
+        const interprises = await Interprise.find({author:decodedToken.userId })
+        res.status(201).json({interprises})
+
+    } catch (e) {
+        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+    }
+})
+
+//получить все посты другого пользователя
+router.post(
+    '/alluserinterpises',
+    async (req, res)=> {
+        try{
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
+            console.log(req.body)
+            const {access_token, user_id} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+            const interprises = await Interprise.find({ author:user_id })
+
+            res.status(201).json({interprises})
+        }
+        catch (e)
+        {
+            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+        }
+    }
+)
+
+
+
+module.exports = router
