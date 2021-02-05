@@ -132,6 +132,23 @@ router.get('/userinfo', async (req, res) => {
     }
 })
 
+//лайк пользователя
+router.post(
+    '/allusers',
+    async (req, res) => {
+        try {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+            const {access_token, user_id} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+            const user = await User.findById(user_id)
+            res.status(201).json({user})
+        } catch (e) {
+            res.status(500).json({message: 'Ошибка сервера. Лайк пользователя'})
+        }
+    })
+
+
 
 //лайк пользователя
 router.post(

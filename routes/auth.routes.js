@@ -86,7 +86,7 @@ router.post(
                 config.get('jwtSecret'),
                 {expiresIn: '1h'}
             )
-            res.json({access_token})
+            res.json({access_token, userId: user.id})
 
         } catch (e) {
             res.status(500).json({message: 'Ошибка сервера. Авторизация'})
