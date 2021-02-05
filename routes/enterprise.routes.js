@@ -31,6 +31,7 @@ router.post(
 
             const {access_token, title, content} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+
             const candidateHeader = await Interprise.findOne({title})
             if (candidateHeader) {
                 return res.status(400).json({message: 'Такой заголовок уже существует'})
@@ -46,3 +47,5 @@ router.post(
             res.status(500).json({message: 'Ошибка сервера. Создание поста'})
         }
     })
+
+module.exports = router
