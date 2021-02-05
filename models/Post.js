@@ -9,7 +9,8 @@ const schema = new Schema({
     date: {type: Date, default: Date.now},  //дата создания поста
     owner: {type: Types.ObjectId, ref: 'User'} , //создатель поста
     likes: {type: Types.ObjectId, ref: 'Likes'},//кто поставил лайки
-    quant_likes : Number //кол-во лайков
+    quant_likes : Number, //кол-во лайков
+    interprise : {type: Types.ObjectId, ref: 'Interprise'}
 })
 
 module.exports = model('Post', schema)

@@ -20,9 +20,6 @@ router.post(
     ],
     async (req, res) => {
         try {
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-
             const errors = validationResult(req)
             console.log(req.body)
             if (!errors.isEmpty()) {
@@ -31,6 +28,9 @@ router.post(
                     message: 'Некорректные данные'
                 })
             }
+
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
             const {access_token, header, body} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
@@ -63,9 +63,6 @@ router.post(
     async (req, res)=> {
         try{
 
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
                 return res.status(400).json({
@@ -73,6 +70,11 @@ router.post(
                     message: 'Некорректные данные'
                 })
             }
+
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
+
             console.log(req.body)
             const {access_token,post_id, header, body} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
@@ -93,6 +95,7 @@ router.get('/', async (req, res) => {
     try {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
         const {access_token} = req.headers
         console.log(access_token)
         const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
@@ -170,8 +173,10 @@ router.post(
     '/alluserposts',
     async (req, res)=> {
         try{
+
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
 
             console.log(req.body)
             const {access_token, user_id} = req.body
@@ -222,7 +227,6 @@ router.post(
             console.log(req.body)
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-
             const {access_token, post_id} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
             const onepost = await Post.findById(post_id)

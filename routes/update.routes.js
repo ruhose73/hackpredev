@@ -10,8 +10,7 @@ const router = Router()
 
 //обновить или добавить мобильный телефон
 router.post(
-    '/numberupdate',
-    [check('mobile', 'Минимальная длина номера 10 символов').isLength({min:10})],
+    '/education',
     async (req, res)=> {
         try{
 
@@ -26,10 +25,12 @@ router.post(
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
             console.log(req.body)
-            const {access_token,mobile} = req.body
+            const {access_token,school, university} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-            const user = await User.findByIdAndUpdate(decodedToken.userId, {mobile:mobile}, {new:true})
-            await user.save()
+            const userSchool = await User.findByIdAndUpdate(decodedToken.userId, {educationSchool:{school:school}}, {new:true})
+            await userSchool.save()
+            const userUniversity = await User.findByIdAndUpdate(decodedToken.userId, {educationUniversity:{university:university}}, {new:true})
+            await userUniversity.save()
             res.status(201).json({message: 'Пользователь обновлен'})
         }
         catch (e)
@@ -39,20 +40,19 @@ router.post(
     }
 )
 
-
-//Добавить ФИО
+//Добавить или обновить ФИО, пол возраст
 router.post(
-    '/nameupdate',
+    '/maininfo',
     async (req, res)=> {
         try{
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
-            const {access_token,firstname,lastname} = req.body
+            const {access_token,firstname,lastname,sex, age, mobile} = req.body
             console.log(req.body)
 
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'))
-            const user = await User.findByIdAndUpdate(decodedToken.userId, {firstName:firstname, lastName:lastname}, {new:true})
+            const user = await User.findByIdAndUpdate(decodedToken.userId, {firstName:firstname, lastName:lastname,sex: sex, age: age, mobile:mobile}, {new:true})
             await user.save()
             res.status(201).json({message: 'Пользователь обновлен'})
         }
@@ -62,6 +62,26 @@ router.post(
         }
     }
 )
+
+
+router.get('/userinfo', async (req, res) => {
+    try {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+        console.log(req.headers)
+        const {access_token} = req.headers
+        console.log(access_token)
+        const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+        console.log(decodedToken)
+
+        const users = await User.find({})
+        res.status(201).json({users})
+
+    } catch (e) {
+        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+    }
+})
+
 
 //лайк пользователя
 router.post(
