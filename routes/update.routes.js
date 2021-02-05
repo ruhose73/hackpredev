@@ -22,6 +22,9 @@ router.post(
                     message: 'Некорректные данные'
                 })
             }
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
             console.log(req.body)
             const {access_token,mobile} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
@@ -42,6 +45,9 @@ router.post(
     '/nameupdate',
     async (req, res)=> {
         try{
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
             const {access_token,firstname,lastname} = req.body
             console.log(req.body)
 
@@ -63,7 +69,8 @@ router.post(
     async (req, res) => {
         try {
             console.log(req.body)
-
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
             const {access_token, user_id} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
 

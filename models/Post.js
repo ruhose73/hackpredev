@@ -1,3 +1,6 @@
+//programmed by Mikhail Toropchinov 2020
+
+
 const {Schema, model, Types} = require('mongoose')
 
 const schema = new Schema({

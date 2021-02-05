@@ -19,6 +19,8 @@ router.post(
     ],
     async (req, res) => {
         try {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
             const errors = validationResult(req)
 
             if (!errors.isEmpty()) {
@@ -58,6 +60,9 @@ router.post(
     ],
     async (req, res) => {
         try {
+            
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
