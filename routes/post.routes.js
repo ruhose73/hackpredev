@@ -241,6 +241,25 @@ router.post(
     }
 )
 
+//получить все посты инициативы
+router.post(
+    '/getfroment',
+    async (req, res)=> {
+        try{
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+            console.log(req.body)
+            const {access_token, interprise_id} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+            const posts = await Post.find( {interprise:interprise_id} )
+            res.status(201).json({posts})
+        }
+        catch (e)
+        {
+            res.status(500).json({message: 'Ошибка сервера. Получение постов инициативы'})
+        }
+    }
+)
 
 //поставить лайк посту
 router.post(
