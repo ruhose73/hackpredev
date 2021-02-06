@@ -16,9 +16,13 @@ router.post(
 
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+			
 			const {access_token} = req.headers
             const {school, university, specialization} = req.body
 			console.log(req.body);
+
+            const {access_token,school, university, specialization,job} = req.body
+
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
             const userSchool = await User.findByIdAndUpdate(decodedToken.userId, {school:school}, {new:true})
             await userSchool.save()
@@ -26,11 +30,16 @@ router.post(
             await userUniversity.save()
             const userSpecialization = await User.findByIdAndUpdate(decodedToken.userId, {specialization:specialization}, {new:true})
             await userSpecialization.save()
+            const userjob = await User.findByIdAndUpdate(decodedToken.userId, {job:job}, {new:true})
+            await userjob.save()
             res.status(201).json({message: 'Пользователь обновлен'})
         }
         catch (e)
         {
             res.status(500).json(e)
+
+            res.status(500).json({message: 'Ошибка сервера. Специализация'})
+
         }
     }
 )
@@ -52,7 +61,7 @@ router.post(
         }
         catch (e)
         {
-            res.status(500).json({message: 'Ошибка сервера. Смена номера'})
+            res.status(500).json({message: 'Ошибка сервера. Основная информация'})
         }
     }
 )
@@ -74,7 +83,7 @@ router.post(
         }
         catch (e)
         {
-            res.status(500).json({message: 'Ошибка сервера. Смена номера'})
+            res.status(500).json({message: 'Ошибка сервера. Графа о себе'})
         }
     }
 )
@@ -96,7 +105,7 @@ router.post(
         }
         catch (e)
         {
-            res.status(500).json({message: 'Ошибка сервера. Смена номера'})
+            res.status(500).json({message: 'Ошибка сервера. Соцсети'})
         }
     }
 )
@@ -113,7 +122,7 @@ router.get('/alluser', async (req, res) => {
         res.status(201).json({users})
 
     } catch (e) {
-        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+        res.status(500).json({ message: 'Ошибка сервера. Загрузка всех пользователей' })
     }
 })
 
@@ -129,7 +138,7 @@ router.get('/userinfo', async (req, res) => {
         res.status(201).json({user})
 
     } catch (e) {
-        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+        res.status(500).json({ message: 'Ошибка сервера. Загрузка своей информации' })
     }
 })
 
@@ -174,6 +183,5 @@ router.post(
             res.status(500).json({message: 'Ошибка сервера. Лайк пользователя'})
         }
     })
-
 
 module.exports = router

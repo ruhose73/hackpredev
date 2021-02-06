@@ -18,6 +18,7 @@ const schema = new Schema({
     university: String, //образование универа
     faculty: String,    //факультет
     specialization:String,  //специализация
+    job:String,  //специализация
 
     aboutme: String,    //обо мне
 
