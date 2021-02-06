@@ -174,7 +174,7 @@ router.post(
 )
 
 //получить все инициативы другого пользователя
-router.post(
+router.get(
     '/getbyid',
     async (req, res)=> {
         try{
