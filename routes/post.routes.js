@@ -7,6 +7,7 @@ const {check, validationResult} = require('express-validator')
 const Post = require('../models/Post')
 const User = require('../models/User')
 const Likes = require('../models/Likes')
+const Interprise = require('../models/enterprise')
 const router = Router()
 
 
@@ -39,11 +40,14 @@ router.post(
                 return res.status(400).json({message: 'Такой заголовок уже существует'})
             }
 
+            //создание поста в таблице Post
             const post = new Post({user:decodedToken.userId, header, body,owner: decodedToken.userId})
-            await post.save()
+            post.save()
 
-            const userpost = await User.findByIdAndUpdate(decodedToken.userId, {posts:post._id}, {new:true})
-            await userpost.save()
+            //Запись о посте в таблице User
+            const userpost = await User.findByIdAndUpdate(decodedToken.userId, {$push:{posts:post._id}})
+            //const userpost = await User.findByIdAndUpdate(decodedToken.userId, {posts:post._id}, {new:true})
+            userpost.save()
             //const nulllike = await Post.findByIdAndUpdate(post_id, {posts:post_id, quant_likes: 0 }, {new:true})
             res.status(201).json({post_id})
 
@@ -51,6 +55,51 @@ router.post(
             res.status(500).json({message: 'Ошибка сервера. Создание поста'})
         }
     })
+
+router.post(
+    '/createpostbyinterprise',
+    [
+        check('header', 'заголовок не должен быть пустым').exists(),
+        check('body', 'Тело не должно быть пустым').exists()
+    ],
+    async (req, res) => {
+        try {
+            const errors = validationResult(req)
+            console.log(req.body)
+            if (!errors.isEmpty()) {
+                return res.status(400).json({
+                    errors: errors.array(),
+                    message: 'Некорректные данные'
+                })
+            }
+
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
+            const {access_token, header, body, interprise_id} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+            const candidateHeader = await Post.findOne({header})
+            if (candidateHeader) {
+                return res.status(400).json({message: 'Такой заголовок уже существует'})
+            }
+
+            const post = new Post({user:decodedToken.userId, header, body,owner: decodedToken.userId, interprise:interprise_id})
+            await post.save()
+
+            const userpost = await User.findByIdAndUpdate(decodedToken.userId, {$push:{posts:post._id}})
+            const interprise = await Interprise.findByIdAndUpdate(interprise_id, {$push:{posts:post._id}})
+            //const userpost1 = await User.findByIdAndUpdate(decodedToken.userId, {posts:post._id}, {new:true})
+            await userpost.save()
+            await interprise.save()
+            //const nulllike = await Post.findByIdAndUpdate(post_id, {posts:post_id, quant_likes: 0 }, {new:true})
+            res.status(201).json({post_id})
+
+        } catch (e) {
+            res.status(500).json({message: 'Ошибка сервера. Создание поста'})
+        }
+    })
+
+
 
 //обновление поста
 router.post(
@@ -72,7 +121,6 @@ router.post(
 
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-
 
             console.log(req.body)
             const {access_token,post_id, header, body} = req.body
@@ -220,6 +268,7 @@ router.post(
             res.status(500).json({message: 'Ошибка сервера. Лайк поста'})
         }
     })
+
 
 router.post(
     '/onepost',

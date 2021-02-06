@@ -26,14 +26,14 @@ router.post(
             await team.save()
             res.status(201).json({interprise_id})
         } catch (e) {
-            res.status(500).json({message: 'Ошибка сервера. Создание поста'})
+            res.status(500).json({message: 'Ошибка сервера. Вступление в команду'})
         }
     })
 
 
 //стать подписчиком инициативы
 router.post(
-    '/intoteaminterprise',
+    '/intouserinterprise',
 
     async (req, res) => {
         try {
@@ -43,7 +43,7 @@ router.post(
             await team.save()
             res.status(201).json({interprise_id})
         } catch (e) {
-            res.status(500).json({message: 'Ошибка сервера. Создание поста'})
+            res.status(500).json({message: 'Ошибка сервера. Стать подписчиком'})
         }
     })
 
@@ -82,7 +82,7 @@ router.post(
 
 
         } catch (e) {
-            res.status(500).json({message: 'Ошибка сервера. Создание поста'})
+            res.status(500).json({message: 'Ошибка сервера. Создание инициативы'})
         }
     })
 
@@ -105,7 +105,7 @@ router.post(
         }
         catch (e)
         {
-            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+            res.status(500).json({message: 'Ошибка сервера. Обновление инициативы'})
         }
     }
 )
@@ -147,7 +147,7 @@ router.get('/myinterpise', async (req, res) => {
 
 
     } catch (e) {
-        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+        res.status(500).json({ message: 'Получить свою инициативу' })
     }
 })
 
@@ -168,7 +168,7 @@ router.post(
         }
         catch (e)
         {
-            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+            res.status(500).json({message: 'Ошибка сервера. Получить инициативы пользователя'})
         }
     }
 )
@@ -189,7 +189,7 @@ router.post(
         }
         catch (e)
         {
-            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+            res.status(500).json({message: 'Ошибка сервера. Получение инициативы по id'})
         }
     }
 )
