@@ -16,7 +16,7 @@ app.use('/api/userupdate', require('./routes/update.routes.js'))
 app.use('/api/posts', require('./routes/post.routes.js'))
 app.use('/api/enterprise', require('./routes/enterprise.routes.js'))
 
-const PORT = config.get('port') || 5000
+const PORT = config.get('port') || 8080
 
 async function start() {
     try{
