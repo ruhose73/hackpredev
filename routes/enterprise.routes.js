@@ -117,16 +117,17 @@ router.get('/allinterpises', async (req, res) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
+		console.log(req.headers)
         const {access_token} = req.headers
         console.log(access_token)
         const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
         console.log(decodedToken)
 
         const interprises = await Interprise.find({})
-        res.status(201).json({interprises})
+        res.status(200).json({interprises})
 
     } catch (e) {
-        res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
+        res.status(500).json({ message: e })
     }
 })
 
