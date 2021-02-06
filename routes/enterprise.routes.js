@@ -172,6 +172,26 @@ router.post(
     }
 )
 
+//получить все инициативы другого пользователя
+router.post(
+    '/getbyid',
+    async (req, res)=> {
+        try{
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
+
+            console.log(req.body)
+            const {access_token, interprise_id} = req.body
+            const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
+            const interprises = await Interprise.findById({interprise_id})
+            res.status(201).json({interprises})
+        }
+        catch (e)
+        {
+            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+        }
+    }
+)
 
 
 module.exports = router

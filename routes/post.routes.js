@@ -42,10 +42,9 @@ router.post(
             const post = new Post({user:decodedToken.userId, header, body,owner: decodedToken.userId})
             await post.save()
 
-            const userpost = await User.findByIdAndUpdate(decodedToken.userId, {posts:post.id}, {new:true})
+            const userpost = await User.findByIdAndUpdate(decodedToken.userId, {posts:post._id}, {new:true})
             await userpost.save()
-            const post_id = post.id
-            const nulllike = await Post.findByIdAndUpdate(post_id, {posts:post.id, quant_likes: 0 }, {new:true})
+            //const nulllike = await Post.findByIdAndUpdate(post_id, {posts:post_id, quant_likes: 0 }, {new:true})
             res.status(201).json({post_id})
 
         } catch (e) {
@@ -107,6 +106,8 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' })
     }
 })
+
+
 
 //поменять на ГЕТ
 //получить все посты
