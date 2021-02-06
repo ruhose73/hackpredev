@@ -18,10 +18,8 @@ router.post(
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 			
 			const {access_token} = req.headers
-            const {school, university, specialization} = req.body
-			console.log(req.body);
 
-            const {access_token,school, university, specialization,job} = req.body
+            const {school, university, specialization,job} = req.body
 
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
             const userSchool = await User.findByIdAndUpdate(decodedToken.userId, {school:school}, {new:true})
