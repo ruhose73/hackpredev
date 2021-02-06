@@ -16,8 +16,9 @@ router.post(
 
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
-
-            const {access_token,school, university, specialization} = req.body
+			const {access_token} = req.headers
+            const {school, university, specialization} = req.body
+			console.log(req.body);
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
             const userSchool = await User.findByIdAndUpdate(decodedToken.userId, {school:school}, {new:true})
             await userSchool.save()
@@ -29,7 +30,7 @@ router.post(
         }
         catch (e)
         {
-            res.status(500).json({message: 'Ошибка сервера. Смена номера'})
+            res.status(500).json(e)
         }
     }
 )

@@ -1,5 +1,4 @@
 //programmed by Mikhail Toropchinov 2020
-
 const {Router} = require('express')
 const config = require('config')
 const jwt = require('jsonwebtoken')
@@ -9,7 +8,6 @@ const User = require('../models/User')
 const Likes = require('../models/Likes')
 const Interprise = require('../models/enterprise')
 const router = Router()
-
 
 
 //вступить в команду в инициативе
@@ -181,15 +179,18 @@ router.get(
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.setHeader('Access-Control-Allow-Headers', 'origin, content-type, accept');
 
-            console.log(req.body)
-            const {access_token, interprise_id} = req.body
+            
+			const {access_token} = req.headers
+            const {interprise_id} = req.query
+			
+			
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-            const interprises = await Interprise.findById({interprise_id})
-            res.status(201).json({interprises})
+            const interprises = await Interprise.findById(interprise_id)
+            res.status(200).json({interprises})
         }
         catch (e)
         {
-            res.status(500).json({message: 'Ошибка сервера. Обновление поста'})
+            res.status(500).json(e)
         }
     }
 )
