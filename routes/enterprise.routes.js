@@ -184,7 +184,7 @@ router.post(
             console.log(req.body)
             const {access_token, interprise_id} = req.body
             const decodedToken = jwt.verify(access_token, config.get('jwtSecret'));
-            const interprises = await Interprise.findById({interprise_id})
+            const interprises = await Interprise.findById(interprise_id)
             res.status(201).json({interprises})
         }
         catch (e)
